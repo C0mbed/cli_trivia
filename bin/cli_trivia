@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require_relative '../config/environment'
+puts 'Command Line Trivia Executed'
+
+cli_trivia::ApiManager.get_response

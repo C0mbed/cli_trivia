@@ -1,6 +1,8 @@
-require "cli_trivia/version"
+#require "cli_trivia/version"
 
 module CliTrivia
   class Error < StandardError; end
   # Your code goes here...
 end
+
+require_relative '../config/environment'
