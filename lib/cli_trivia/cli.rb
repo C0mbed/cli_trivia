@@ -2,8 +2,8 @@ class Cli
 
   def initialize
     @generated_questions = ApiManager.generate_questions
-    ApiManager.create_question
-
+    ApiManager.create_question(@generated_questions)
+    binding.pry
   end
 
   def call
@@ -14,9 +14,10 @@ class Cli
       puts('To exit, type exit')
       puts('----------------------------------------------------')
       puts('Categories:')
-      puts('----------------------------------------------------')
+      puts('----------------------------------------------------' )
       puts('----------------------------------------------------')
       user_input = gets.chomp
+
 
     end
   end

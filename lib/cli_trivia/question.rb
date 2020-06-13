@@ -6,20 +6,21 @@ class Question
 
   @@all = []
 
-  def initialize
+  def initialize(question_data)
+    @category = question_data['category']
+    @type = question_data['type']
+    @difficulty = question_data['difficulty']
+    @question = question_data['question']
+    @correct_answer = question_data['correct_answer']
+    @incorrect_answer = question_data['incorrect_answer']
     @@all << self
+  end
+
+  def self.all
+    @@all
   end
 
   def self.reset_all
     @@all.clear
-  end
-
-  def self.create_from_response(question)
-    @category = question['category']
-    @type = question['type']
-    @difficulty = question['difficulty']
-    @question = question['question']
-    @correct_answer = question['correct_answer']
-    @incorrect_answer = question['incorrect_answer']
   end
 end

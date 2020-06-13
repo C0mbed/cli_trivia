@@ -19,7 +19,7 @@ class ApiManager
 
   def self.create_question(questions)
     questions['results'].each do |question|
-      Question.create_from_response(question)
+      Question.new(question)
     end
   end
 
