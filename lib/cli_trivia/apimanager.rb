@@ -17,10 +17,18 @@ class ApiManager
     @response
   end
 
+  def self.create_categories(questions)
+    questions['results'].each do |question|
+      Category.new(question['category'])
+    end
+  end
+
   def self.create_question(questions)
     questions['results'].each do |question|
       Question.new(question)
     end
   end
+
+
 
 end

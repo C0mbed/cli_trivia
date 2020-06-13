@@ -3,21 +3,31 @@ require 'pry'
 # This is a question object. A hash of question data is passed in on creation from ApiManager.  It is then stored and converted for use in CLI.
 class Question
   attr_accessor :category, :type, :difficulty, :question, :correct_answer, :incorrect_answers
+  extend  CliTrivia::Findable
 
   @@all = []
 
   def initialize(question_data)
-    @category = question_data['category']
+    @category = add_category(question_data['category'])
     @type = question_data['type']
     @difficulty = question_data['difficulty']
     @question = question_data['question']
     @correct_answer = question_data['correct_answer']
-    @incorrect_answer = question_data['incorrect_answer']
+    @incorrect_answers = question_data['incorrect_answers']
+    @@all << self
+  end
+
+  def save
     @@all << self
   end
 
   def self.all
     @@all
+  end
+
+  def add_category(name)
+    category = Category.find_or_create_by_name(name)
+    category.add_question(self)
   end
 
   def self.reset_all
