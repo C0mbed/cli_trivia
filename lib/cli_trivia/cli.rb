@@ -6,6 +6,8 @@ class Cli
     @generated_questions = ApiManager.generate_questions
     ApiManager.create_categories(@generated_questions)
     ApiManager.create_question(@generated_questions)
+    @right = 0
+    @wrong = 0
   end
 
   def call
@@ -33,7 +35,7 @@ class Cli
   end
 
   def generate_random
-    count = Question.all.length
+    count = 3
     used_questions = []
     while count.positive?
       question = Question.all.sample
@@ -57,25 +59,32 @@ class Cli
     answer_choices
   end
 
-  def display_question(random_questions)
-    answer_choices = generate_answers(random_questions.correct_answer, random_questions.incorrect_answers)
-    puts('----------------------------------------------------')
-    puts(random_questions.question)
-    puts('----------------------------------------------------')
-    puts("1. #{answer_choices[:random_choices][0]}")
-    puts("2. #{answer_choices[:random_choices][1]}")
-    puts("3. #{answer_choices[:random_choices][2]}")
-    puts("4. #{answer_choices[:random_choices][3]}")
-    puts('----------------------------------------------------')
-    user_choice = gets.chomp
+  def increment_answers
 
-    case user_input
-    when "#{answer_choices[0]}"
-      puts("Wrong, try again!")
-    when "#{answer_choices[1]}"
-      #do something
-    else
-      puts("Please make a valid selection:")
-    end
   end
+
+  def display_question(random_questions)
+      answer_choices = generate_answers(random_questions.correct_answer, random_questions.incorrect_answers)
+      correct_answer_index = answer_choices[:random_choices].index(random_questions.correct_answer)
+      puts('----------------------------------------------------')
+      puts(random_questions.question)
+      puts('----------------------------------------------------')
+      puts("1. #{answer_choices[:random_choices][0]}")
+      puts("2. #{answer_choices[:random_choices][1]}")
+      puts("3. #{answer_choices[:random_choices][2]}")
+      puts("4. #{answer_choices[:random_choices][3]}")
+      puts('----------------------------------------------------')
+      user_input = gets.strip.to_i
+
+      if user_input == correct_answer_index + 1
+        puts "That's correct.  Press Any Key to Continue."
+        @right += 1
+        puts "You have #{@right} correct, and #{@wrong} wrong answers."
+      else
+        puts "Thats not correct. #{answer_choices[:random_choices][correct_answer_index]} was the correct answer.  Press Any Key to Continue."
+        @wrong += 1
+        puts "You have #{@right} correct, and #{@wrong} wrong answers."
+      end
+    end
+
 end
