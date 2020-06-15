@@ -1,12 +1,14 @@
 class Category
-  attr_accessor :name, :questions
+  attr_accessor :name, :questions, :id
   extend CliTrivia::Findable
 
   @@all = []
 
-  def initialize(name)
+  def initialize(name, id)
+    @id = id
     @name = name
     @questions = []
+    @@all << self
   end
 
   def self.all
@@ -15,16 +17,6 @@ class Category
 
   def self.all_by_name
     @@all.sort! {|a, b|  a.name <=> b.name}
-  end
-
-  def save
-    @@all << self
-  end
-
-  def self.create(name)
-    category = new(name)
-    category.save
-    category
   end
 
   def add_question(question)

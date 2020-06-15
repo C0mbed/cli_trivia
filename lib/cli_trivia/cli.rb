@@ -3,11 +3,10 @@ require 'pry'
 class Cli
 
   def initialize
-    @generated_questions = ApiManager.generate_questions
-    ApiManager.create_categories(@generated_questions)
-    ApiManager.create_question(@generated_questions)
+    ApiManager.generate_categories
     @right = 0
     @wrong = 0
+    call
   end
 
   def call
@@ -38,13 +37,10 @@ class Cli
 
   def generate_random
     system('clear')
-    count = 3
-    used_questions = []
-    while count.positive?
-      question = Question.all.sample
-      display_question(question) unless used_questions.include?(question)
-      used_questions << question
-      count -= 1
+    ApiManager.generate_random_questions
+    ApiManager.create_question
+    Question.all.each do |question|
+      display_question(question)
     end
     display_result
   end
@@ -67,13 +63,18 @@ class Cli
 
   def display_questions_by_category(user_input)
     index = user_input - 1
-    category = Category.all[index]
-    display_question(category.questions[0])
+    question_id = Category.all_by_name[index].id
+    ApiManager.generate_questions_by_id(question_id)
+    ApiManager.create_question
+    category = Category.all.select {|q| q.id == question_id }
+    category[0].questions.each do |question|
+      display_question(question)
+    end
     display_result
   end
 
   def display_result
-    system("clear")
+    system('clear')
     puts('----------------------------------------------------')
     puts('----------------------------------------------------')
     puts('----------------------------------------------------')
@@ -121,13 +122,10 @@ class Cli
       @right += 1
       puts "That's correct.  Press Any Enter to Continue."
       gets
-
     else
       @wrong += 1
       puts "WRONG! #{answer_choices[:random_choices][correct_answer_index]} was the correct answer.  Press Any Enter to Continue."
       gets
-
     end
-    end
-
+  end
 end
