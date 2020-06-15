@@ -14,12 +14,17 @@ class Cli
     @right = 0
     @wrong = 0
     puts('----------------------------------------------------')
+    puts('----------------------------------------------------')
     puts('Welcome to Command Line Trivia!!')
+    puts('----------------------------------------------------')
+    puts('')
+    puts('')
     puts('Would you prefer to have random questions, or do you want to select a category?')
     puts('----------------------------------------------------')
-    puts('Your choice:')
     puts('----------------------------------------------------')
     puts(' 1. random, 2. category, or type exit')
+    puts('----------------------------------------------------')
+    puts('')
     puts('')
     user_input = gets.strip.to_i
 
@@ -51,6 +56,8 @@ class Cli
     puts('----------------------------------------------------')
     puts('Please select a category:')
     puts('----------------------------------------------------')
+    puts('')
+    puts('')
     categories = Category.all_by_name
     count = 1
     categories.each do |category|
@@ -73,19 +80,6 @@ class Cli
     display_result
   end
 
-  def display_result
-    system('clear')
-    puts('----------------------------------------------------')
-    puts('----------------------------------------------------')
-    puts('----------------------------------------------------')
-    puts("CONGRATULATIONS!  YOU GOT #{@right} RIGHT, AND #{@wrong} WRONG!")
-    puts('----------------------------------------------------')
-    puts('----------------------------------------------------')
-    puts('----------------------------------------------------')
-    puts('press enter to return to the main menu')
-    gets
-    call
-  end
 
   def generate_answers(correct, incorrect)
     random_answers = []
@@ -101,16 +95,18 @@ class Cli
     answer_choices
   end
 
-  def display_question(random_questions)
+  def display_question(question)
     system('clear')
-    answer_choices = generate_answers(random_questions.correct_answer, random_questions.incorrect_answers)
-    correct_answer_index = answer_choices[:random_choices].index(random_questions.correct_answer)
-    puts('----------------------------------------------------')
-    puts("You have #{@right} correct, and #{@wrong} wrong answers.")
+    answer_choices = generate_answers(question.correct_answer, question.incorrect_answers)
+    correct_answer_index = answer_choices[:random_choices].index(question.correct_answer)
     puts('----------------------------------------------------')
     puts('----------------------------------------------------')
-    puts(random_questions.question)
+    puts("SCORE: #{@right}/10")
     puts('----------------------------------------------------')
+    puts(question.question)
+    puts('----------------------------------------------------')
+    puts('')
+    puts('')
     puts("1. #{answer_choices[:random_choices][0]}")
     puts("2. #{answer_choices[:random_choices][1]}")
     puts("3. #{answer_choices[:random_choices][2]}")
@@ -120,12 +116,30 @@ class Cli
 
     if user_input == correct_answer_index + 1
       @right += 1
+      puts('')
       puts "That's correct.  Press Any Enter to Continue."
       gets
     else
       @wrong += 1
+      puts('')
       puts "WRONG! #{answer_choices[:random_choices][correct_answer_index]} was the correct answer.  Press Any Enter to Continue."
       gets
     end
+  end
+
+  def display_result
+    system('clear')
+    puts('----------------------------------------------------')
+    puts('----------------------------------------------------')
+    puts("COMPLETE!")
+    puts('----------------------------------------------------')
+    puts('')
+    puts("YOU GOT #{@right} RIGHT, AND #{@wrong} WRONG!")
+    puts('----------------------------------------------------')
+    puts('')
+    puts('')
+    puts('press enter to return to the main menu')
+    gets
+    call
   end
 end
