@@ -1,6 +1,7 @@
 require_relative '../lib/cli_trivia/version'
 require 'pry'
 require 'HTTParty'
+require 'cgi'
 
 require_relative '../lib/concerns/findable'
 require_relative '../lib/cli_trivia/apimanager'

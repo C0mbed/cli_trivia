@@ -11,10 +11,17 @@ class Question
     @category = add_category(question_data['category'])
     @type = question_data['type']
     @difficulty = question_data['difficulty']
-    @question = question_data['question']
+    @question = format_string(question_data['question'])
     @correct_answer = question_data['correct_answer']
     @incorrect_answers = question_data['incorrect_answers']
     @@all << self
+  end
+
+  def format_string(question_string)
+    formatted_string = question_string.gsub(/&quot;|&#039;/, "\'")
+    return formatted_string.gsub(/&amp;/, "\&")
+    binding.pry
+
   end
 
   def save
