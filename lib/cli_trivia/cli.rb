@@ -1,7 +1,8 @@
-require 'pry'
-
+# Cli class is a controller for the app and handles the display of all information and interactions with the user.
 class Cli
 
+  # Generates the categories, but not the questions on initialization and resets the @right and @wrong counters.  Finally
+  # invokes call to begin the app.
   def initialize
     ApiManager.generate_categories
     @right = 0
@@ -10,33 +11,33 @@ class Cli
   end
 
   def call
-    system('clear')
-    @right = 0
-    @wrong = 0
-    puts('----------------------------------------------------')
-    puts('----------------------------------------------------')
-    puts('Welcome to Command Line Trivia!!')
-    puts('----------------------------------------------------')
-    puts('')
-    puts('')
-    puts('Would you prefer to have random questions, or do you want to select a category?')
-    puts('----------------------------------------------------')
-    puts('----------------------------------------------------')
-    puts(' 1. random, 2. category, or type exit')
-    puts('----------------------------------------------------')
-    puts('')
-    puts('')
-    user_input = gets.strip.to_i
+    user_input = nil
+    until user_input == 3 do
+      system('clear')
+      puts('----------------------------------------------------')
+      puts('----------------------------------------------------')
+      puts('Welcome to Command Line Trivia!!')
+      puts('----------------------------------------------------')
+      puts('')
+      puts('')
+      puts('Would you prefer to have random questions, or do you want to select a category?')
+      puts('----------------------------------------------------')
+      puts('----------------------------------------------------')
+      puts(' 1. random, 2. category, or 3. exit')
+      puts('----------------------------------------------------')
+      puts('')
+      puts('')
+      user_input = gets.strip.to_i
 
-    case user_input
-      when 1
-        generate_random
-      when 2
-        display_categories
-      when 3
-        system(exit)
-      when 'exit'
-        system(exit)
+      case user_input
+        when 1
+          generate_random
+        when 2
+          display_categories
+        when 3
+          system('clear')
+          system(exit)
+      end
     end
   end
 
@@ -80,17 +81,17 @@ class Cli
     display_result
   end
 
-
   def generate_answers(correct, incorrect)
-    random_answers = []
+    correct = Question.format_string(correct)
+    random_answers = [correct]
     answer_choices = {
       correct: correct,
       random_choices: []
     }
     incorrect.each do |wrong|
+      wrong = Question.format_string(wrong)
       random_answers << wrong
     end
-    random_answers << correct
     answer_choices[:random_choices] = random_answers.shuffle
     answer_choices
   end
@@ -140,6 +141,9 @@ class Cli
     puts('')
     puts('press enter to return to the main menu')
     gets
+    @right = 0
+    @wrong = 0
+    Question.clear_all
     call
   end
 end

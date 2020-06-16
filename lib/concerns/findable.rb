@@ -1,3 +1,4 @@
+# Allows each class to search its @@all variable, and if necessary create a new version of the class by name.
 module CliTrivia::Findable
 
   def find_by_name(name)
