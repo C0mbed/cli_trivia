@@ -27,7 +27,7 @@ Or install it yourself as:
 
 
 ## Run this Gem
-run bin/cli_trivia to begin!
+run `bin/cli_trivia` to begin!
 
 ## Development
 
