@@ -13,22 +13,10 @@ class Cli
   def call
     user_input = nil
     until user_input == 3 do
-      system('clear')
-      puts('----------------------------------------------------')
-      puts('----------------------------------------------------')
-      puts('Welcome to Command Line Trivia!!')
-      puts('----------------------------------------------------')
-      puts('')
-      puts('')
-      puts('Would you prefer to have random questions, or do you want to select a category?')
-      puts('----------------------------------------------------')
-      puts('----------------------------------------------------')
-      puts(' 1. random, 2. category, or 3. exit')
-      puts('----------------------------------------------------')
-      puts('')
-      puts('')
-      user_input = gets.strip.to_i
-
+      greeting = 'Welcome to COMMAND LINE TRIVIA!'
+      main_text = 'Would you prefer to have random questions, or do you want to select a category?'
+      selection_text = '1 Random, 2 Category, or 3 EXIT'
+      user_input = display(greeting, main_text, selection_text)
       case user_input
         when 1
           generate_random
@@ -39,6 +27,25 @@ class Cli
           system(exit)
       end
     end
+  end
+
+  def display(header = "", title_text = "", body_text = "", footer_text = "" )
+    system('clear')
+    puts('----------------------------------------------------')
+    puts('----------------------------------------------------')
+    puts("#{header}")
+    puts('----------------------------------------------------')
+    puts('')
+    puts('')
+    puts("#{title_text}")
+    puts('----------------------------------------------------')
+    puts('----------------------------------------------------')
+    puts("#{body_text}")
+    puts('----------------------------------------------------')
+    puts('')
+    user_input = gets.strip.to_i
+    puts('')
+    puts('----------------------------------------------------')
   end
 
   def generate_random
@@ -99,7 +106,7 @@ class Cli
   def display_question(question)
     system('clear')
     answer_choices = generate_answers(question.correct_answer, question.incorrect_answers)
-    correct_answer_index = answer_choices[:random_choices].index(question.correct_answer)
+    correct_answer_index = answer_choices[:random_choices].index(question.correct_answer) || 1
     puts('----------------------------------------------------')
     puts('----------------------------------------------------')
     puts("SCORE: #{@right}/10")
@@ -115,7 +122,7 @@ class Cli
     puts('----------------------------------------------------')
     user_input = gets.strip.to_i
 
-    if user_input == correct_answer_index + 1
+    if user_input - 1 == correct_answer_index
       @right += 1
       puts('')
       puts "That's correct.  Press Any Enter to Continue."
