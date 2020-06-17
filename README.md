@@ -1,10 +1,15 @@
 # CliTrivia
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/cli_trivia`. To experiment with that code, run `bin/console` for an interactive prompt.
+The best Command Line Trivia app on the internet!  A quick one player game of Trivia pitting each user against the best of the Open Trivia Database.  
 
-TODO: Delete this and the text above, and describe your gem
+CLI Trivia makes use of 'HTTParty' to retrieve category and question JSON data from the [Open Trivia Database API](https://opentdb.com/api_config.php).  Upon initialize, CLI Trivia generates a token to prevent duplicate questions from appearing, and creates a Category class Object for each trivia category.  The user is then offered the choice between 10 questions: either randomly selected from a specific category.  CLI Trivia then displays the questions text, answer choices, and requests user input as to which answer they wish to select.  User score is calculated and displayed.  
+
+IF the user selects 'random', CLI Trivia randomly generates 10 questions and creates Question class Objects.  If the user selects 'category' the user is presented with a list of possible trivia categories.  Upon selected, CLI Trivia makes an API call to retrieve 10 questions based on the user selected Category ID.  
+
+Once all 10 questions are answered, the User is presented with a summary screen and the chance to exit or begin again.  
 
 ## Installation
+
 
 Add this line to your application's Gemfile:
 
@@ -20,9 +25,9 @@ Or install it yourself as:
 
     $ gem install cli_trivia
 
-## Usage
 
-TODO: Write usage instructions here
+## Run this Gem
+run `bin/cli_trivia` to begin!
 
 ## Development
 
