@@ -8,6 +8,7 @@ class Cli
     ApiManager.generate_categories
     @right = 0
     @wrong = 0
+    @correct_index = nil
     call
   end
 
@@ -117,7 +118,7 @@ class Cli
       end
       answers = {
         correct: Question.format_string(correct),
-        choices: [correct] + random_answers
+        choices: [correct] + random_answers,
       }
       answers
       end
@@ -126,7 +127,6 @@ class Cli
   def display_question(question)
     system('clear')
     answer_choices = generate_answers(question.correct_answer, question.incorrect_answers, question.type)
-    correct_answer_index = answer_choices[:choices].index(answer_choices[:correct])
     puts('----------------------------------------------------------------------------------')
     puts('----------------------------------------------------------------------------------')
     puts('')
@@ -139,11 +139,13 @@ class Cli
     if answer_choices[:choices].length > 2
       count = 1
       random_answers = answer_choices[:choices].shuffle
+      @correct_index = random_answers.index(answer_choices[:correct])
       random_answers.each do |answer_choice|
         puts("#{count}.  #{answer_choice}")
         count += 1
       end
     else
+      @correct_index = answer_choices[:choices].index(answer_choices[:correct])
       puts("1. #{answer_choices[:choices][0]}")
       puts("2. #{answer_choices[:choices][1]}")
     end
@@ -151,9 +153,8 @@ class Cli
     puts('----------------------------------------------------------------------------------')
     puts('----------------------------------------------------------------------------------')
     puts('')
-    user_input = gets.strip.to_i
-
-    if user_input - 1 == correct_answer_index
+    user_input = gets.strip.to_i - 1
+    if user_input == @correct_index
       @right += 1
       puts('')
       puts "That's correct.  Press Any Enter to Continue."
@@ -161,8 +162,9 @@ class Cli
     else
       @wrong += 1
       puts('')
-      puts "WRONG! #{answer_choices[:choices][correct_answer_index]} was CORRECT.  Press Any Enter to Continue."
+      puts "WRONG! #{random_answers[@correct_index]} was CORRECT.  Press Any Enter to Continue."
       gets
+
     end
   end
 
@@ -170,7 +172,7 @@ class Cli
     system('clear')
     puts('----------------------------------------------------')
     puts('----------------------------------------------------')
-    puts("COMPLETE!")
+    puts('COMPLETE!')
     puts('----------------------------------------------------')
     puts('')
     puts("YOU GOT #{@right} RIGHT, AND #{@wrong} WRONG!")
