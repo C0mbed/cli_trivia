@@ -1,3 +1,4 @@
+require 'pry'
 # Cli class is a controller for the app and handles the display of all information and interactions with the user.
 class Cli
 
@@ -11,41 +12,43 @@ class Cli
   end
 
   def call
+    system('clear')
     user_input = nil
+    @right = 0
+    @wrong = 0
     until user_input == 3 do
-      greeting = 'Welcome to COMMAND LINE TRIVIA!'
-      main_text = 'Would you prefer to have random questions, or do you want to select a category?'
-      selection_text = '1 Random, 2 Category, or 3 EXIT'
-      user_input = display(greeting, main_text, selection_text)
+      system('clear')
+      puts('----------------------------------------------------------------------------------')
+      puts('----------------------------------------------------------------------------------')
+      puts('')
+      puts('                      Welcome to Command Line Trivia!!')
+      puts('')
+      puts('----------------------------------------------------------------------------------')
+      puts('')
+      puts('Would you prefer to have random questions, or do you want to select a category?')
+      puts('')
+      puts('----------------------------------------------------------------------------------')
+      puts('----------------------------------------------------------------------------------')
+      puts('')
+      puts(' 1. random, 2. category, or 3. exit')
+      puts('')
+      puts('----------------------------------------------------------------------------------')
+      puts('')
+      puts('')
+      user_input = gets.strip.to_i
+
       case user_input
-        when 1
-          generate_random
-        when 2
-          display_categories
-        when 3
-          system('clear')
-          system(exit)
+      when 1
+        generate_random
+      when 2
+        display_categories
+      when 3
+        system(exit)
+        system('clear')
+      when 'exit'
+        system(exit)
       end
     end
-  end
-
-  def display(header = "", title_text = "", body_text = "", footer_text = "" )
-    system('clear')
-    puts('----------------------------------------------------')
-    puts('----------------------------------------------------')
-    puts("#{header}")
-    puts('----------------------------------------------------')
-    puts('')
-    puts('')
-    puts("#{title_text}")
-    puts('----------------------------------------------------')
-    puts('----------------------------------------------------')
-    puts("#{body_text}")
-    puts('----------------------------------------------------')
-    puts('')
-    user_input = gets.strip.to_i
-    puts('')
-    puts('----------------------------------------------------')
   end
 
   def generate_random
@@ -60,21 +63,31 @@ class Cli
 
   def display_categories
     system('clear')
-    puts('----------------------------------------------------')
-    puts('----------------------------------------------------')
-    puts('Please select a category:')
-    puts('----------------------------------------------------')
-    puts('')
-    puts('')
     categories = Category.all_by_name
     count = 1
+    puts('----------------------------------------------------------------------------------')
+    puts('----------------------------------------------------------------------------------')
+    puts('')
+    puts('                      Welcome to Command Line Trivia!!')
+    puts('')
+    puts('----------------------------------------------------------------------------------')
+    puts('')
     categories.each do |category|
       puts("#{count}. #{category.name}")
       count += 1
     end
+    puts('')
+    puts('----------------------------------------------------------------------------------')
+    puts('----------------------------------------------------------------------------------')
+    puts('')
+    puts('Please select a category:')
+    puts('')
+    puts('----------------------------------------------------------------------------------')
+    puts('')
     user_input = gets.strip.to_i
     display_questions_by_category(user_input)
   end
+
 
   def display_questions_by_category(user_input)
     index = user_input - 1
@@ -88,38 +101,56 @@ class Cli
     display_result
   end
 
-  def generate_answers(correct, incorrect)
-    correct = Question.format_string(correct)
-    random_answers = [correct]
-    answer_choices = {
-      correct: correct,
-      random_choices: []
-    }
-    incorrect.each do |wrong|
-      wrong = Question.format_string(wrong)
-      random_answers << wrong
+  def generate_answers(correct, incorrect, type)
+    if type == 'boolean'
+      answers = {
+        correct: Question.format_string(correct),
+        incorrect: incorrect,
+        choices: %w[True False]
+      }
+      answers
+    elsif type == 'multiple'
+      random_answers = []
+      incorrect.each do |wrong|
+        wrong = Question.format_string(wrong)
+        random_answers << wrong
+      end
+      answers = {
+        correct: Question.format_string(correct),
+        choices: [correct] + random_answers
+      }
+      answers
+      end
     end
-    answer_choices[:random_choices] = random_answers.shuffle
-    answer_choices
-  end
 
   def display_question(question)
     system('clear')
-    answer_choices = generate_answers(question.correct_answer, question.incorrect_answers)
-    correct_answer_index = answer_choices[:random_choices].index(question.correct_answer) || 1
-    puts('----------------------------------------------------')
-    puts('----------------------------------------------------')
-    puts("SCORE: #{@right}/10")
-    puts('----------------------------------------------------')
+    answer_choices = generate_answers(question.correct_answer, question.incorrect_answers, question.type)
+    correct_answer_index = answer_choices[:choices].index(answer_choices[:correct])
+    puts('----------------------------------------------------------------------------------')
+    puts('----------------------------------------------------------------------------------')
+    puts('')
+    puts("COMMAND LINE TRIVIA                                       SCORE: #{@right} / QUESTION #{@right+@wrong+1}/10")
+    puts('')
+    puts('----------------------------------------------------------------------------------')
     puts(question.question)
-    puts('----------------------------------------------------')
+    puts('----------------------------------------------------------------------------------')
     puts('')
+    if answer_choices[:choices].length > 2
+      count = 1
+      random_answers = answer_choices[:choices].shuffle
+      random_answers.each do |answer_choice|
+        puts("#{count}.  #{answer_choice}")
+        count += 1
+      end
+    else
+      puts("1. #{answer_choices[:choices][0]}")
+      puts("2. #{answer_choices[:choices][1]}")
+    end
     puts('')
-    puts("1. #{answer_choices[:random_choices][0]}")
-    puts("2. #{answer_choices[:random_choices][1]}")
-    puts("3. #{answer_choices[:random_choices][2]}")
-    puts("4. #{answer_choices[:random_choices][3]}")
-    puts('----------------------------------------------------')
+    puts('----------------------------------------------------------------------------------')
+    puts('----------------------------------------------------------------------------------')
+    puts('')
     user_input = gets.strip.to_i
 
     if user_input - 1 == correct_answer_index
@@ -130,7 +161,7 @@ class Cli
     else
       @wrong += 1
       puts('')
-      puts "WRONG! #{answer_choices[:random_choices][correct_answer_index]} was the correct answer.  Press Any Enter to Continue."
+      puts "WRONG! #{answer_choices[:choices][correct_answer_index]} was CORRECT.  Press Any Enter to Continue."
       gets
     end
   end

@@ -1,7 +1,6 @@
 require_relative '../lib/cli_trivia/version'
 require 'pry'
 require 'HTTParty'
-require 'json'
 
 require_relative '../lib/concerns/filter'
 require_relative '../lib/concerns/findable'
