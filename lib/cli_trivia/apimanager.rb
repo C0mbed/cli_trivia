@@ -1,14 +1,11 @@
 require 'pry'
-
 # Handles the external API call to the "Open Trivia Database" to get trivia question hashes
 class ApiManager
-  include HTTParty
 
   # base api url
   BASE_URL = 'https://opentdb.com/api.php?amount=10&token='.freeze
 
   def initialize
-    @response = nil
     @categories = nil
     @token = nil
   end
@@ -23,14 +20,14 @@ class ApiManager
   end
 
   def self.generate_random_questions
-    @response = HTTParty.get("#{BASE_URL}#{@token}")
-    @response
+    response = HTTParty.get("#{BASE_URL}#{@token}")
+    self.create_questions(response)
   end
 
   def self.generate_questions_by_id(category_id)
     category_url = "&category=#{category_id}"
-    @response = HTTParty.get("#{BASE_URL}#{@token}#{category_url}")
-    @response
+    response = HTTParty.get("#{BASE_URL}#{@token}#{category_url}")
+    self.create_questions(response)
   end
 
   def self.generate_categories
@@ -40,8 +37,8 @@ class ApiManager
     end
   end
 
-  def self.create_question
-    @response['results'].each do |question|
+  def self.create_questions(response)
+    response['results'].each do |question|
       Question.new(question)
     end
   end

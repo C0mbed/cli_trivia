@@ -9,11 +9,9 @@ class Cli
     @right = 0
     @wrong = 0
     @correct_index = nil
-    call
   end
 
   def call
-    system('clear')
     user_input = nil
     @right = 0
     @wrong = 0
@@ -51,9 +49,7 @@ class Cli
   end
 
   def generate_random
-    system('clear')
     ApiManager.generate_random_questions
-    ApiManager.create_question
     Question.all.each do |question|
       display_question(question)
     end
@@ -91,7 +87,6 @@ class Cli
     index = user_input - 1
     question_id = Category.all_by_name[index].id
     ApiManager.generate_questions_by_id(question_id)
-    ApiManager.create_question
     category = Category.all.select {|q| q.id == question_id }
     category[0].questions.each do |question|
       display_question(question)
