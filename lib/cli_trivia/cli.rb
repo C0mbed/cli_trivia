@@ -44,9 +44,7 @@ class Cli
       when 2
         display_categories
       when 3
-        system(exit)
         system('clear')
-      when 'exit'
         system(exit)
       end
     end
@@ -88,7 +86,6 @@ class Cli
     user_input = gets.strip.to_i
     display_questions_by_category(user_input)
   end
-
 
   def display_questions_by_category(user_input)
     index = user_input - 1
@@ -162,7 +159,7 @@ class Cli
     else
       @wrong += 1
       puts('')
-      puts "WRONG! #{random_answers[@correct_index]} was CORRECT.  Press Any Enter to Continue."
+      puts "WRONG! #{answer_choices[:correct]} was CORRECT.  Press Any Enter to Continue."
       gets
 
     end
