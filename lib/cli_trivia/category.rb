@@ -28,7 +28,7 @@ class Category
     end
     sorted_names
   end
-  
+
   # This stores questions that belong to this Category.  @questions is an instance variable available to this Category
   # Object only
   def add_question(question)

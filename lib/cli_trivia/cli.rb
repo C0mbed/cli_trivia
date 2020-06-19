@@ -90,13 +90,11 @@ class Cli
   def question_type(answer_choices)
     if answer_choices[:choices].length > 2
       random_answers = answer_choices[:choices].shuffle
-      @correct_index = random_answers.index(answer_choices[:correct])
-      random_answers
     else
       random_answers = answer_choices[:choices]
-      @correct_index = random_answers.index(answer_choices[:correct])
-      random_answers
     end
+    @correct_index = random_answers.index(answer_choices[:correct])
+    random_answers
   end
 
   def correct?(user_input, random_answers)
@@ -108,21 +106,18 @@ class Cli
     answer_choices = generate_answers(question.correct_answer, question.incorrect_answers, question.type)
     random_answers = question_type(answer_choices)
     puts('')
-    puts("CLI trivia                                                                                 #{@right} correct")
+    puts("CLI trivia :: #{@right} correct")
     puts('')
     user_input = display_answer_choices(question, answer_choices, random_answers)
-
+    puts('')
     if correct?(user_input, random_answers)
       @right += 1
-      puts('')
       puts "That's correct.  Press Any Enter to Continue."
-      gets
     else
       @wrong += 1
-      puts('')
-      puts "WRONG! #{answer_choices[:correct]} was CORRECT.  Press Any Enter to Continue."
-      gets
+      puts "Wrong. #{answer_choices[:correct]} was right.  Enter to continue."
     end
+    gets
   end
 
   def display_result
