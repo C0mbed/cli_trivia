@@ -135,20 +135,15 @@ class Cli
 
   def display_result
     system('clear')
-    puts('----------------------------------------------------')
-    puts('----------------------------------------------------')
-    puts('COMPLETE!')
-    puts('----------------------------------------------------')
     puts('')
-    puts("YOU GOT #{@right} RIGHT, AND #{@wrong} WRONG!")
-    puts('----------------------------------------------------')
+    puts('Thanks for playing CLI trivia')
+    puts("Final score: #{@right}/10")
+    puts('')
     puts('')
     puts('')
     puts('press enter to return to the main menu')
     gets
     @right = 0
     @wrong = 0
-    Question.clear_all
-    call
   end
 end
