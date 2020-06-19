@@ -21,7 +21,12 @@ class Category
   # A modification of the self.all method to return all Categories alphabetically.  Used when categories are printed
   # for user choice.
   def self.all_by_name
-    @@all.sort! {|a, b|  a.name <=> b.name}
+    sorted = @@all.sort! {|a, b|  a.name <=> b.name}
+    sorted_names = []
+    sorted.each do |category|
+      sorted_names << category.name
+    end
+    sorted_names
   end
   
   # This stores questions that belong to this Category.  @questions is an instance variable available to this Category

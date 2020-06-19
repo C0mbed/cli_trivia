@@ -17,18 +17,10 @@ class Cli
     @wrong = 0
     until user_input == 3 do
       system('clear')
-      puts('----------------------------------------------------------------------------------')
-      puts('----------------------------------------------------------------------------------')
       puts('')
-      puts('                      Welcome to Command Line Trivia!!')
-      puts('')
-      puts('----------------------------------------------------------------------------------')
+      puts('CLI Trivia')
       puts('')
       user_input = @prompt.select("Choose either random, or select a category?", %w(Random Category Exit))
-      puts('')
-      puts('----------------------------------------------------------------------------------')
-      puts('')
-      puts('')
 
       case user_input
       when "Random"
@@ -53,36 +45,19 @@ class Cli
   def display_categories
     system('clear')
     categories = Category.all_by_name
-    count = 1
-    puts('----------------------------------------------------------------------------------')
-    puts('----------------------------------------------------------------------------------')
     puts('')
-    puts('                      Welcome to Command Line Trivia!!')
+    puts('CLI Trivia')
     puts('')
-    puts('----------------------------------------------------------------------------------')
     puts('')
-    categories.each do |category|
-      puts("#{count}. #{category.name}")
-      count += 1
-    end
-    puts('')
-    puts('----------------------------------------------------------------------------------')
-    puts('----------------------------------------------------------------------------------')
-    puts('')
-    puts('Please select a category:')
-    puts('')
-    puts('----------------------------------------------------------------------------------')
-    puts('')
-    user_input = gets.strip.to_i
+    user_input = @prompt.select("Please Select a Category", categories)
     display_questions_by_category(user_input)
   end
 
   def display_questions_by_category(user_input)
-    index = user_input - 1
-    question_id = Category.all_by_name[index].id
+    category = Category.find_by_name(user_input)
+    question_id = category.id
     ApiManager.generate_questions_by_id(question_id)
-    category = Category.all.select {|q| q.id == question_id }
-    category[0].questions.each do |question|
+    category.questions.each do |question|
       display_question(question)
     end
     display_result
@@ -112,10 +87,10 @@ class Cli
 
   def display_answer_choices(question, answer_choices, random_answers)
     if answer_choices[:choices].length > 2
-      user_input = @prompt.select("#{question.question}", random_answers)
+      user_input = @prompt.select("Q#{@right+@wrong+1}/10> #{question.question}", random_answers)
       user_input
     else
-      user_input = @prompt.select("#{question.question}", answer_choices[:choices])
+      user_input = @prompt.select("Q#{@right+@wrong+1}/10> #{question.question}", answer_choices[:choices])
       user_input
     end
   end
@@ -140,22 +115,19 @@ class Cli
     system('clear')
     answer_choices = generate_answers(question.correct_answer, question.incorrect_answers, question.type)
     random_answers = question_type(answer_choices)
-    puts('----------------------------------------------------------------------------------')
     puts('')
-    puts("COMMAND LINE TRIVIA                                       SCORE: #{@right} / QUESTION #{@right+@wrong+1}/10")
-    puts('')
-    puts('----------------------------------------------------------------------------------')
+    puts("CLI trivia                                                                                 #{@right} correct")
     puts('')
     user_input = display_answer_choices(question, answer_choices, random_answers)
-    puts('')
-    puts('----------------------------------------------------------------------------------')
-    puts('')
+
     if correct?(user_input, random_answers)
       @right += 1
+      puts('')
       puts "That's correct.  Press Any Enter to Continue."
       gets
     else
       @wrong += 1
+      puts('')
       puts "WRONG! #{answer_choices[:correct]} was CORRECT.  Press Any Enter to Continue."
       gets
     end

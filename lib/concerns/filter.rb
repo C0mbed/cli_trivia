@@ -9,6 +9,8 @@ module CliTrivia::Filter
     fs = fs.gsub(/&atilde;/, 'a')
     fs = fs.gsub(/&uuml;/, 'u')
     fs = fs.gsub(/&Ouml;/, 'O')
+    fs = fs.gsub(/&prime;/, "'")
+    fs = fs.gsub(/&Prime;/, '"')
     fs
   end
 end
