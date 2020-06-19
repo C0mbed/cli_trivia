@@ -7,7 +7,6 @@ class Cli
     ApiManager.generate_categories
     @right = 0
     @wrong = 0
-    @correct_index = nil
     @prompt = TTY::Prompt.new
   end
 
@@ -16,7 +15,7 @@ class Cli
     puts('')
     puts('CLI Trivia')
     puts('')
-    user_input = @prompt.select('Choose either random, or select a category?', %w(Random Category Exit))
+    user_input = @prompt.select('Choose either random, or select a category?', %w[Random Category Exit])
     case user_input
     when 'Random'
       generate_random
@@ -43,7 +42,7 @@ class Cli
     puts('CLI Trivia')
     puts('')
     puts('')
-    user_input = @prompt.select('Please Select a Category', categories)
+    user_input = @prompt.select('Please Select a Category (scroll for more)', categories, per_page: 15)
     display_questions_by_category(user_input)
   end
 
@@ -68,8 +67,8 @@ class Cli
     elsif type == 'multiple'
       random_answers = []
       incorrect.each do |wrong|
-        wrong = Question.format_string(wrong)
-        random_answers << wrong
+        formatted_answer = Question.format_string(wrong)
+        random_answers << formatted_answer
       end
       answers = {
         correct: Question.format_string(correct),
@@ -93,24 +92,23 @@ class Cli
     else
       random_answers = answer_choices[:choices]
     end
-    @correct_index = random_answers.index(answer_choices[:correct])
     random_answers
   end
 
-  def correct?(user_input, random_answers)
-    user_input == random_answers[@correct_index]
+  def correct?(user_input, correct_answer)
+    user_input == correct_answer
   end
 
   def display_question(question)
     system('clear')
     answer_choices = generate_answers(question.correct_answer, question.incorrect_answers, question.type)
-    random_answers = question_type(answer_choices)
+    random_answers = answer_choices[:choices]
     puts('')
     puts("CLI trivia :: #{@right} correct")
     puts('')
     user_input = display_answer_choices(question, answer_choices, random_answers)
     puts('')
-    if correct?(user_input, random_answers)
+    if correct?(user_input, answer_choices[:correct])
       @right += 1
       puts "That's correct.  Press Any Enter to Continue."
     else
@@ -123,16 +121,18 @@ class Cli
   def display_result
     system('clear')
     puts('')
-    puts('Thanks for playing CLI trivia')
-    puts("Final score: #{@right}/10")
+    puts("CLI trivia :: Final score: #{@right}/10")
     puts('')
-    puts('')
-    puts('')
-    puts('press enter to return to the main menu')
-    gets
-    Question.clear_all
-    @right = 0
-    @wrong = 0
-    call
+    user_input = @prompt.select('Exit or restart?', %w[Restart Exit])
+    case user_input
+    when 'Restart'
+      Question.clear_all
+      @right = 0
+      @wrong = 0
+      call
+    when 'Exit'
+      system('clear')
+      system(exit)
+    end
   end
 end
