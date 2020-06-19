@@ -13,9 +13,7 @@ class Cli
 
   def call
     user_input = nil
-    @right = 0
-    @wrong = 0
-    until user_input == 3 do
+    until user_input == 'Exit' do
       system('clear')
       puts('')
       puts('CLI Trivia')
@@ -27,9 +25,9 @@ class Cli
         generate_random
       when "Category"
         display_categories
-      when "Exit"
-        system('clear')
-        system(exit)
+        #when "Exit"
+        #system('clear')
+        #system(exit)
       end
     end
   end
@@ -143,7 +141,9 @@ class Cli
     puts('')
     puts('press enter to return to the main menu')
     gets
+    Question.clear_all
     @right = 0
     @wrong = 0
+    call
   end
 end
