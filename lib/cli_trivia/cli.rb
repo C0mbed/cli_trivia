@@ -1,4 +1,3 @@
-require 'pry'
 # Cli class is a controller for the app and handles the display of all information and interactions with the user.
 class Cli
 
@@ -9,6 +8,7 @@ class Cli
     @right = 0
     @wrong = 0
     @correct_index = nil
+    @prompt = TTY::Prompt.new
   end
 
   def call
@@ -24,24 +24,18 @@ class Cli
       puts('')
       puts('----------------------------------------------------------------------------------')
       puts('')
-      puts('Would you prefer to have random questions, or do you want to select a category?')
-      puts('')
-      puts('----------------------------------------------------------------------------------')
-      puts('----------------------------------------------------------------------------------')
-      puts('')
-      puts(' 1. random, 2. category, or 3. exit')
+      user_input = @prompt.select("Choose either random, or select a category?", %w(Random Category Exit))
       puts('')
       puts('----------------------------------------------------------------------------------')
       puts('')
       puts('')
-      user_input = gets.strip.to_i
 
       case user_input
-      when 1
+      when "Random"
         generate_random
-      when 2
+      when "Category"
         display_categories
-      when 3
+      when "Exit"
         system('clear')
         system(exit)
       end
@@ -110,53 +104,60 @@ class Cli
       end
       answers = {
         correct: Question.format_string(correct),
-        choices: [correct] + random_answers,
+        choices: [correct] + random_answers
       }
       answers
       end
+  end
+
+  def display_answer_choices(question, answer_choices, random_answers)
+    if answer_choices[:choices].length > 2
+      user_input = @prompt.select("#{question.question}", random_answers)
+      user_input
+    else
+      user_input = @prompt.select("#{question.question}", answer_choices[:choices])
+      user_input
     end
+  end
+
+  def question_type(answer_choices)
+    if answer_choices[:choices].length > 2
+      random_answers = answer_choices[:choices].shuffle
+      @correct_index = random_answers.index(answer_choices[:correct])
+      random_answers
+    else
+      random_answers = answer_choices[:choices]
+      @correct_index = random_answers.index(answer_choices[:correct])
+      random_answers
+    end
+  end
+
+  def correct?(user_input, random_answers)
+    user_input == random_answers[@correct_index]
+  end
 
   def display_question(question)
     system('clear')
     answer_choices = generate_answers(question.correct_answer, question.incorrect_answers, question.type)
-    puts('----------------------------------------------------------------------------------')
+    random_answers = question_type(answer_choices)
     puts('----------------------------------------------------------------------------------')
     puts('')
     puts("COMMAND LINE TRIVIA                                       SCORE: #{@right} / QUESTION #{@right+@wrong+1}/10")
     puts('')
     puts('----------------------------------------------------------------------------------')
-    puts(question.question)
-    puts('----------------------------------------------------------------------------------')
     puts('')
-    if answer_choices[:choices].length > 2
-      count = 1
-      random_answers = answer_choices[:choices].shuffle
-      @correct_index = random_answers.index(answer_choices[:correct])
-      random_answers.each do |answer_choice|
-        puts("#{count}.  #{answer_choice}")
-        count += 1
-      end
-    else
-      @correct_index = answer_choices[:choices].index(answer_choices[:correct])
-      puts("1. #{answer_choices[:choices][0]}")
-      puts("2. #{answer_choices[:choices][1]}")
-    end
+    user_input = display_answer_choices(question, answer_choices, random_answers)
     puts('')
     puts('----------------------------------------------------------------------------------')
-    puts('----------------------------------------------------------------------------------')
     puts('')
-    user_input = gets.strip.to_i - 1
-    if user_input == @correct_index
+    if correct?(user_input, random_answers)
       @right += 1
-      puts('')
       puts "That's correct.  Press Any Enter to Continue."
       gets
     else
       @wrong += 1
-      puts('')
       puts "WRONG! #{answer_choices[:correct]} was CORRECT.  Press Any Enter to Continue."
       gets
-
     end
   end
 

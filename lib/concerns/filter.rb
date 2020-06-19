@@ -11,5 +11,4 @@ module CliTrivia::Filter
     fs = fs.gsub(/&Ouml;/, 'O')
     fs
   end
-
 end

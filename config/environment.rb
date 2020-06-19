@@ -1,6 +1,7 @@
 require_relative '../lib/cli_trivia/version'
 require 'pry'
 require 'httparty'
+require 'tty-prompt'
 
 require_relative '../lib/concerns/filter'
 require_relative '../lib/concerns/findable'

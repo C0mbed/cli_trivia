@@ -18,6 +18,7 @@ class Question
     @incorrect_answers = question_data['incorrect_answers']
     @@all << self
   end
+  # "abcΣΣΣ".encode("ASCII", "UTF-8", fallback: {"Σ" => "E"})
 
   # Allows for the adding of a Category Object to self.  A question BELONGS to a category.
   def add_category(name)
