@@ -9,7 +9,7 @@ IF the user selects 'random', CLI Trivia randomly generates 10 questions and cre
 Once all 10 questions are answered, the User is presented with a summary screen and the chance to exit or begin again.  
 
 ## Installation
-Clone this repo to the directy of your choice!
+Clone this repo to the directory of your choice!
 
 ## Run this Gem
 In your terminal, run `bin/cli_trivia` from within the `cli_trivia` directory to begin!
