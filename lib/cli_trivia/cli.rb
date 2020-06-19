@@ -10,6 +10,8 @@ class Cli
     @prompt = TTY::Prompt.new
   end
 
+  # Begins the trivia game by printing the welcome, title, and asks user to make the first choice between random and
+  # category.  Uses case to determine how to proceed from call.
   def call
     system('clear')
     puts('')
@@ -27,6 +29,8 @@ class Cli
     end
   end
 
+  # Run when user selects 'Random' from the main menu, calls on ApiManager class to query the api and create
+  # Question Objects.  Finally, new question objects are displayed using display_question.
   def generate_random
     ApiManager.generate_random_questions
     Question.all.each do |question|
@@ -75,7 +79,7 @@ class Cli
         choices: [correct] + random_answers
       }
       answers
-      end
+    end
   end
 
   def display_answer_choices(question, answer_choices, random_answers)

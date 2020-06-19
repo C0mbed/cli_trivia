@@ -22,6 +22,7 @@ module CliTrivia::Filter
     fsg = fsg.gsub(/&rsquo;/, "'")
     fsg = fsg.gsub(/&lsquo;/, "'")
     fsg = fsg.gsub(/&ntilde;/, 'n')
+    fsg = fsg.gsub(/&lrm;/, '')
     fsg
   end
 end
