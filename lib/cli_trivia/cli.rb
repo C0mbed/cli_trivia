@@ -12,23 +12,19 @@ class Cli
   end
 
   def call
-    user_input = nil
-    until user_input == 'Exit' do
+    system('clear')
+    puts('')
+    puts('CLI Trivia')
+    puts('')
+    user_input = @prompt.select('Choose either random, or select a category?', %w(Random Category Exit))
+    case user_input
+    when 'Random'
+      generate_random
+    when 'Category'
+      display_categories
+    when 'Exit'
       system('clear')
-      puts('')
-      puts('CLI Trivia')
-      puts('')
-      user_input = @prompt.select("Choose either random, or select a category?", %w(Random Category Exit))
-
-      case user_input
-      when "Random"
-        generate_random
-      when "Category"
-        display_categories
-        #when "Exit"
-        #system('clear')
-        #system(exit)
-      end
+      system(exit)
     end
   end
 
@@ -47,7 +43,7 @@ class Cli
     puts('CLI Trivia')
     puts('')
     puts('')
-    user_input = @prompt.select("Please Select a Category", categories)
+    user_input = @prompt.select('Please Select a Category', categories)
     display_questions_by_category(user_input)
   end
 
@@ -85,11 +81,9 @@ class Cli
 
   def display_answer_choices(question, answer_choices, random_answers)
     if answer_choices[:choices].length > 2
-      user_input = @prompt.select("Q#{@right+@wrong+1}/10> #{question.question}", random_answers)
-      user_input
+      @prompt.select("Q#{@right+@wrong+1}/10> #{question.question}", random_answers)
     else
-      user_input = @prompt.select("Q#{@right+@wrong+1}/10> #{question.question}", answer_choices[:choices])
-      user_input
+      @prompt.select("Q#{@right+@wrong+1}/10> #{question.question}", answer_choices[:choices])
     end
   end
 
