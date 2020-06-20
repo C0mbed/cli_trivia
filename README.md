@@ -8,11 +8,20 @@ IF the user selects 'random', CLI Trivia randomly generates 10 questions and cre
 
 Once all 10 questions are answered, the User is presented with a summary screen and the chance to exit or begin again.  
 
-## Installation
-Clone this repo to the directory of your choice!
+## Installation and Running this Gem
+```gem install cli_trivia``` 
 
-## Run this Gem
-In your terminal, run `bin/cli_trivia` from within the `cli_trivia` directory to begin!
+then: 
+
+```bundle install```
+
+and to run:
+
+```cli_trivia```
+
+IF you get an error saying ```Could not locate GemFile``` you will need to manually install ```httparty``` and ```tty-prompt``` by using ```gem install [package name]```
+
+Optionally - you can clone this repo to the directory of your choice!  If you cloned the repo, run ```bundle install``` to install ```httparty``` and ```tty-prompt``` and then type ```exe/cli_trivia``` from within the `cli_trivia` directory to begin!
 
 ## Development
 
