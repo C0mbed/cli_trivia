@@ -9,25 +9,10 @@ IF the user selects 'random', CLI Trivia randomly generates 10 questions and cre
 Once all 10 questions are answered, the User is presented with a summary screen and the chance to exit or begin again.  
 
 ## Installation
-
-
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'cli_trivia'
-```
-
-And then execute:
-
-    $ bundle install
-
-Or install it yourself as:
-
-    $ gem install cli_trivia
-
+Clone this repo to the directory of your choice!
 
 ## Run this Gem
-run `bin/cli_trivia` to begin!
+In your terminal, run `bin/cli_trivia` from within the `cli_trivia` directory to begin!
 
 ## Development
 
