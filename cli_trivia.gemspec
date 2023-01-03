@@ -27,7 +27,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 2.1.4"
-  spec.add_development_dependency 'httparty', '~> 0.18.1'
+  spec.add_development_dependency 'httparty', '~> 0.21.0'
   spec.add_development_dependency "pry", ">= 0"
   spec.add_development_dependency "rake", "~> 12.0"
   spec.add_development_dependency 'tty-prompt', '~> 0.21.0'
